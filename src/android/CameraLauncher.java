@@ -981,7 +981,13 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                 // Generate a temporary file
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                 String fileName = "IMG_" + timeStamp + (this.encodingType == JPEG ? ".jpg" : ".png");
-                localFile = new File(getTempDirectoryPath() + fileName);
+
+                if (Build.VERSION.SDK_INT >= 30) {
+                    localFile = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_PICTURES), fileName);
+                } else {
+                    localFile = new File(getTempDirectoryPath() + fileName);
+                }
+                
                 galleryUri = Uri.fromFile(localFile);
                 writeUncompressedImage(fileStream, galleryUri);
                 try {
